@@ -1,0 +1,78 @@
+/*
+	drop table PollAnswer
+	drop table PollQuestion
+	drop table Poll
+	drop table PollCategory
+	drop table RegisteredUser
+	
+*/
+CREATE TABLE PollCategory
+(
+	PollCategoryID int primary key identity(1,1),
+	PollCategoryDescription varchar(200)
+);
+
+CREATE TABLE Poll
+(
+	PollID int primary key identity(1,1),
+	PollDescription varchar(200),
+	PollCategoryID int,
+	PollStartDate datetime,
+	PollEndDate datetime
+);
+
+ALTER TABLE [dbo].[Poll]  WITH CHECK ADD  CONSTRAINT [FK_Poll_PollCategory] FOREIGN KEY([PollCategoryID])
+REFERENCES [dbo].[PollCategory] ([PollCategoryID]);
+ALTER TABLE [dbo].[Poll] CHECK CONSTRAINT [FK_Poll_PollCategory];
+
+CREATE TABLE PollQuestion
+(
+	PollQuestionID int primary key identity(1,1),
+	PollID int,
+	PollQuestionText varchar(1024),
+	PollQuestionOrder int
+);
+
+ALTER TABLE [dbo].[PollQuestion]  WITH CHECK ADD  CONSTRAINT [FK_PollQuestion_Poll] FOREIGN KEY([PollID])
+REFERENCES [dbo].[Poll] ([PollID]);
+ALTER TABLE [dbo].[PollQuestion] CHECK CONSTRAINT [FK_PollQuestion_Poll];
+
+CREATE TABLE PollAnswer
+(
+	PollAnswerID int primary key identity(1,1),
+	PollAnswerText varchar(1024),
+	PollAnswerOrder int,
+	PollQuestionID int
+);
+
+ALTER TABLE [dbo].[PollAnswer]  WITH CHECK ADD  CONSTRAINT [FK_PollAnswer_PollQuestion] FOREIGN KEY([PollQuestionID])
+REFERENCES [dbo].[PollQuestion] ([PollQuestionID]);
+ALTER TABLE [dbo].[PollAnswer] CHECK CONSTRAINT [FK_PollAnswer_PollQuestion];
+
+CREATE TABLE RegisteredUser
+(
+	UserID int primary key identity(1,1),
+	FirstName varchar(50)
+);
+
+CREATE TABLE VoteTransaction
+(
+	VoteTransactionID int primary key identity(1,1),
+	VoteDatetime datetime,
+	VoteUserID int,
+	VoteQuestionID int,
+	VoteAnswerID int,
+);
+
+ALTER TABLE [dbo].[VoteTransaction]  WITH CHECK ADD CONSTRAINT [FK_VoteTransaction_User] FOREIGN KEY([VoteUserID])
+REFERENCES [dbo].[RegisteredUser] ([UserID]);
+ALTER TABLE [dbo].[VoteTransaction] CHECK CONSTRAINT [FK_VoteTransaction_User];
+
+ALTER TABLE [dbo].[VoteTransaction]  WITH CHECK ADD CONSTRAINT [FK_VoteTransaction_Question] FOREIGN KEY([VoteQuestionID])
+REFERENCES [dbo].[PollQuestion] ([PollQuestionID]);
+ALTER TABLE [dbo].[VoteTransaction] CHECK CONSTRAINT [FK_VoteTransaction_Question];
+
+ALTER TABLE [dbo].[VoteTransaction]  WITH CHECK ADD CONSTRAINT [FK_VoteTransaction_Answer] FOREIGN KEY([VoteAnswerID])
+REFERENCES [dbo].[PollAnswer] ([PollAnswerID]);
+ALTER TABLE [dbo].[VoteTransaction] CHECK CONSTRAINT [FK_VoteTransaction_Answer];
+ 

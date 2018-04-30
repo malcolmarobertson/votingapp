@@ -1,0 +1,78 @@
+/* clear all data
+	delete votetransaction
+	delete pollanswer
+	delete pollquestion
+	delete poll
+	delete pollcategory
+	delete registereduser
+*/
+
+set identity_insert PollCategory on
+insert into PollCategory(PollCategoryID,PollCategoryDescription)
+values
+	(1,'Elections'),
+	(2,'Market Research')
+set identity_insert PollCategory off;
+
+
+set identity_insert Poll on
+insert into Poll(PollID,PollDescription,PollCategoryID,PollStartDate,PollEndDate)
+values
+	(1,'US Presidential Elections 2016',1,'2016-06-01','2016-06-01'),
+	(2,'Favourite Car poll',2,'2018-04-01','2018-08-31')
+set identity_insert Poll off;
+
+
+set identity_insert PollQuestion on
+insert into PollQuestion(PollQuestionID,PollID,PollQuestionText,PollQuestionOrder)
+values
+	(1,1,'Who is your Candidate for the 2016 US presidential elections?',1),
+	(2,2,'In your opinion, which car make is the safest?',1),
+	(3,2,'In your opinion, which car make is the most affordable?',2)
+set identity_insert PollQuestion off;
+
+
+set identity_insert PollAnswer on
+insert into PollAnswer(PollAnswerID,PollAnswerText,PollAnswerOrder,PollQuestionID)
+values
+	(1,'Mrs Hillary Clinton',1,1),
+	(2,'Mr Donald Trump',2,1),
+	(3,'Volkswagen',1,2),
+	(4,'BMW',2,2),
+	(5,'Toyota',3,2),
+	(6,'Volkswagen',1,3),
+	(7,'BMW',2,3),
+	(8,'Toyota',3,3)
+set identity_insert PollAnswer off;
+
+--create dummy users
+set identity_insert RegisteredUser on
+insert into RegisteredUser(UserID,FirstName)
+values (1,'Simon')
+set identity_insert RegisteredUser off;
+
+-- Do some voting
+--election
+insert into VoteTransaction(VoteDatetime,VoteUserID,VoteQuestionID,VoteAnswerID)
+values (getdate(),1,1,1)
+--car
+insert into VoteTransaction(VoteDatetime,VoteUserID,VoteQuestionID,VoteAnswerID)
+values (getdate(),1,2,3)
+
+insert into VoteTransaction(VoteDatetime,VoteUserID,VoteQuestionID,VoteAnswerID)
+values (getdate(),1,3,4)
+
+/*
+select * from poll
+select * from pollcategory
+select * from pollquestion
+select * from pollanswer
+
+select * from poll
+*/
+select u.FirstName,VoteDatetime,pq.PollQuestionText,pa.PollAnswerText
+from votetransaction t
+inner join registereduser u on u.userid = t.Voteuserid
+inner join pollquestion pq on pq.PollQuestionID = t.VoteQuestionID
+inner join PollAnswer pa on pa.PollAnswerID = t.VoteAnswerID
+order by pq.PollQuestionOrder,Pa.PollAnswerOrder
