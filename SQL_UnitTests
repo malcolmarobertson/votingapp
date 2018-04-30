@@ -1,0 +1,19 @@
+/*
+insert new poll as test
+expected result: poll with questions and text in correct order
+*/
+
+--create new poll and answers
+--will do if we have frontend that captures polls
+
+
+--display results
+select
+	pc.PollCategoryDescription,p.PollDescription,p.PollStartDate,p.PollEndDate,pq.PollQuestionText,pq.PollQuestionOrder,pa.PollAnswerText,pa.PollAnswerOrder 
+from poll p 
+inner join pollcategory pc on pc.PollcategoryID = p.PollCategoryID
+inner join PollQuestion pq on pq.PollID = p.PollID
+inner join PollAnswer pa on pa.PollQuestionID = pq.PollQuestionID 
+where PollDescription = 'US Presidential Elections 2016'
+order by pq.PollQuestionOrder,pa.PollAnswerOrder
+
