@@ -1,0 +1,29 @@
+﻿<h1>Voter Data</h1>
+
+<p>This component demonstrates fetching Voter data from the server.</p>
+
+<p *ngIf="!voterList"><em>Loading...</em></p>
+
+<p>
+    <a [routerLink]="['/register-voter']">Create New</a>
+</p>
+
+<table class='table' *ngIf="voterList">
+    <thead>
+        <tr>
+            <th>Voter Id</th>
+            <th>FullName</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let voter of voterList">
+            <td>{{ voter.voterId }}</td>
+            <td>{{ voter.fullName }}</td>
+            <td>
+            <td>
+                <a [routerLink]="['/voter/edit/', voter.voterId]">Edit</a> |
+                <a [routerLink]="" (click)="delete(voter.voterId)">Delete</a>
+            </td>
+        </tr>
+    </tbody>
+</table>  

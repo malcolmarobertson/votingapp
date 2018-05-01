@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+
+    <h1>{{title}}</h1>
+    <h3>Voter</h3>
+    <hr />
+    <form [formGroup]="voterForm" (ngSubmit)="save()" #formDir="ngForm" novalidate>
+
+        <div class="form-group row">
+            <label class=" control-label col-md-12" for="Full Name">Full Name</label>
+            <div class="col-md-4">
+                <input class="form-control" type="text" formControlName="fullName">
+            </div>
+            <span class="text-danger" *ngIf="voterForm.hasError('required', 'fullName') && formDir.submitted">
+                Name is required.
+            </span>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-default">Save</button>
+            <button class="btn" (click)="cancel()">Cancel</button>
+        </div>
+    </form>
+</body>
+</html>  
